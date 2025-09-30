@@ -8,8 +8,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
-    minify: 'terser',
+    minify: false, // Disable minification to avoid terser issues
     rollupOptions: {
       output: {
         manualChunks: undefined,
@@ -21,4 +20,3 @@ export default defineConfig({
     port: 5173
   }
 })
-
