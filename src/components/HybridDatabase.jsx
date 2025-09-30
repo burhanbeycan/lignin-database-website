@@ -1,447 +1,281 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 
 const HybridDatabase = () => {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [performanceFilter, setPerformanceFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
-  const [sortField, setSortField] = useState('')
-  const [sortDirection, setSortDirection] = useState('asc')
   const itemsPerPage = 20
 
-  // Generate sample hybrid data
-  useEffect(() => {
-    const generateSampleData = () => {
-      const ligninTypes = ['Guaiacyl', 'Syringyl', 'p-Hydroxyphenyl', 'Mixed']
-      const cations = ['EMIM', 'BMIM', 'HMIM', 'OMIM', 'Py14', 'N1114']
-      const anions = ['BF4', 'PF6', 'Tf2N', 'OTf', 'DCA', 'SCN']
+  // Sample hybrid system data
+  const hybridData = useMemo(() => {
+    return Array.from({ length: 200 }, (_, i) => {
+      const ligninId = `LIG_${String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')}`
+      const ilId = `IL_${String(Math.floor(Math.random() * 150) + 1).padStart(3, '0')}`
+      const conductivity = (5 + Math.random() * 20).toFixed(1)
+      const capacity = (180 + Math.random() * 100).toFixed(0)
+      const sustainability = (60 + Math.random() * 40).toFixed(1)
       
-      const sampleData = Array.from({ length: 200 }, (_, i) => {
-        const conductivity = Math.random() * 25
-        const capacity = 100 + Math.random() * 200
-        const stability = 70 + Math.random() * 30
-        const efficiency = 80 + Math.random() * 20
-        
-        // Calculate performance score
-        const performanceScore = (
-          (conductivity / 25) * 0.3 +
-          (capacity / 300) * 0.3 +
-          (stability / 100) * 0.2 +
-          (efficiency / 100) * 0.2
-        ) * 100
-        
-        return {
-          id: `HYB_${String(i + 1).padStart(4, '0')}`,
-          lignin_id: `LIG_${String(Math.floor(Math.random() * 5000) + 1).padStart(4, '0')}`,
-          il_id: `IL_${String(Math.floor(Math.random() * 2000) + 1).padStart(4, '0')}`,
-          lignin_type: ligninTypes[Math.floor(Math.random() * ligninTypes.length)],
-          cation: cations[Math.floor(Math.random() * cations.length)],
-          anion: anions[Math.floor(Math.random() * anions.length)],
-          lignin_ratio: (10 + Math.random() * 40).toFixed(1),
-          conductivity: conductivity.toFixed(3),
-          capacity: capacity.toFixed(1),
-          cycle_stability: stability.toFixed(1),
-          coulombic_efficiency: efficiency.toFixed(1),
-          energy_density: (50 + Math.random() * 150).toFixed(1),
-          power_density: (100 + Math.random() * 500).toFixed(1),
-          performance_score: performanceScore.toFixed(1),
-          sustainability_index: (60 + Math.random() * 40).toFixed(1),
-          cost_index: (20 + Math.random() * 80).toFixed(1),
-          predicted_lifetime: Math.floor(500 + Math.random() * 1500),
-          temperature_stability: (-20 + Math.random() * 100).toFixed(1)
-        }
-      })
-      
-      setData(sampleData)
-      setLoading(false)
-    }
-
-    generateSampleData()
+      return {
+        id: `HYB_${String(i + 1).padStart(3, '0')}`,
+        ligninId,
+        ilId,
+        ratio: `${Math.floor(Math.random() * 30 + 10)}:${Math.floor(Math.random() * 30 + 10)}`,
+        conductivity: parseFloat(conductivity),
+        capacity: parseInt(capacity),
+        sustainability: parseFloat(sustainability),
+        carbonReduction: (15 + Math.random() * 25).toFixed(1),
+        costReduction: (10 + Math.random() * 30).toFixed(1),
+        performanceScore: ((parseFloat(conductivity) / 25 + parseInt(capacity) / 280 + parseFloat(sustainability) / 100) / 3 * 100).toFixed(1)
+      }
+    })
   }, [])
 
-  // Filter and search data
   const filteredData = useMemo(() => {
-    let filtered = data.filter(item => {
-      const matchesSearch = searchTerm === '' || 
-        item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.lignin_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.il_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.lignin_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.cation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.anion.toLowerCase().includes(searchTerm.toLowerCase())
+    return hybridData.filter(item => {
+      const matchesSearch = item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.ligninId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           item.ilId.toLowerCase().includes(searchTerm.toLowerCase())
       
-      const matchesPerformance = performanceFilter === 'all' || 
-        (performanceFilter === 'high' && parseFloat(item.performance_score) >= 75) ||
-        (performanceFilter === 'medium' && parseFloat(item.performance_score) >= 50 && parseFloat(item.performance_score) < 75) ||
-        (performanceFilter === 'low' && parseFloat(item.performance_score) < 50)
+      let matchesPerformance = true
+      if (performanceFilter === 'high') {
+        matchesPerformance = parseFloat(item.performanceScore) >= 70
+      } else if (performanceFilter === 'medium') {
+        matchesPerformance = parseFloat(item.performanceScore) >= 50 && parseFloat(item.performanceScore) < 70
+      } else if (performanceFilter === 'low') {
+        matchesPerformance = parseFloat(item.performanceScore) < 50
+      }
       
       return matchesSearch && matchesPerformance
     })
+  }, [hybridData, searchTerm, performanceFilter])
 
-    // Sort data
-    if (sortField) {
-      filtered.sort((a, b) => {
-        let aVal = a[sortField]
-        let bVal = b[sortField]
-        
-        if (!isNaN(aVal) && !isNaN(bVal)) {
-          aVal = parseFloat(aVal)
-          bVal = parseFloat(bVal)
-        }
-        
-        if (sortDirection === 'asc') {
-          return aVal > bVal ? 1 : -1
-        } else {
-          return aVal < bVal ? 1 : -1
-        }
-      })
-    }
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    return filteredData.slice(startIndex, startIndex + itemsPerPage)
+  }, [filteredData, currentPage])
 
-    return filtered
-  }, [data, searchTerm, performanceFilter, sortField, sortDirection])
-
-  // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage)
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
 
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('asc')
-    }
-  }
-
-  const exportData = () => {
+  const exportToCSV = () => {
+    const headers = ['ID', 'Lignin_ID', 'IL_ID', 'Ratio', 'Conductivity', 'Capacity', 'Sustainability', 'Carbon_Reduction', 'Cost_Reduction', 'Performance_Score']
     const csvContent = [
-      Object.keys(filteredData[0] || {}).join(','),
-      ...filteredData.map(row => Object.values(row).join(','))
+      headers.join(','),
+      ...filteredData.map(row => [
+        row.id, row.ligninId, row.ilId, row.ratio, row.conductivity,
+        row.capacity, row.sustainability, row.carbonReduction, row.costReduction, row.performanceScore
+      ].join(','))
     ].join('\n')
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const link = document.createElement('a')
-    const url = URL.createObjectURL(blob)
-    link.setAttribute('href', url)
-    link.setAttribute('download', 'hybrid_systems_filtered.csv')
-    link.style.visibility = 'hidden'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'hybrid_systems_database.csv'
+    a.click()
+    window.URL.revokeObjectURL(url)
   }
 
-  const getPerformanceBadge = (score) => {
-    const numScore = parseFloat(score)
-    if (numScore >= 75) return 'bg-primary-100 text-primary-800'
-    if (numScore >= 50) return 'bg-yellow-100 text-yellow-800'
-    return 'bg-red-100 text-red-800'
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center space-y-4">
-          <div className="loading-spinner w-8 h-8 mx-auto"></div>
-          <p className="text-gray-600">Loading hybrid systems database...</p>
-        </div>
-      </div>
-    )
+  const getPerformanceColor = (score) => {
+    if (score >= 70) return 'text-green-600 bg-green-100'
+    if (score >= 50) return 'text-yellow-600 bg-yellow-100'
+    return 'text-red-600 bg-red-100'
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center space-x-3">
-          <span className="text-4xl">🔬</span>
-          <h1 className="text-3xl font-bold text-gray-900">Hybrid Systems Database</h1>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+          <div className="flex items-center space-x-3 mb-4">
+            <div className="text-4xl">🔬</div>
+            <h1 className="text-3xl font-bold text-gray-800">Hybrid Systems Database</h1>
+          </div>
+          <p className="text-gray-600 mb-6">
+            Optimized lignin-ionic liquid hybrid formulations with ML-predicted performance metrics for sustainable battery applications.
+          </p>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-purple-50 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-purple-600">{filteredData.length}</div>
+              <div className="text-sm text-purple-700">Hybrid Systems</div>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {filteredData.filter(item => parseFloat(item.performanceScore) >= 70).length}
+              </div>
+              <div className="text-sm text-green-700">High Performance</div>
+            </div>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {Math.max(...filteredData.map(item => item.conductivity)).toFixed(1)}
+              </div>
+              <div className="text-sm text-blue-700">Max Conductivity</div>
+            </div>
+            <div className="bg-orange-50 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-orange-600">
+                {Math.max(...filteredData.map(item => item.capacity))}
+              </div>
+              <div className="text-sm text-orange-700">Max Capacity</div>
+            </div>
+          </div>
         </div>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          Explore {data.length.toLocaleString()} lignin-ionic liquid hybrid formulations with predicted performance metrics
-        </p>
-      </div>
 
-      {/* Search and Filters */}
-      <div className="card">
-        <div className="grid md:grid-cols-4 gap-4">
-          <div className="md:col-span-2">
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+        {/* Search and Filters */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <div className="flex-1">
               <input
                 type="text"
-                placeholder="Search by ID, lignin type, cation, or anion..."
+                placeholder="Search by hybrid ID, lignin ID, or IL ID..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="search-input pl-10"
               />
             </div>
-          </div>
-          
-          <div>
             <select
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               value={performanceFilter}
               onChange={(e) => {
                 setPerformanceFilter(e.target.value)
                 setCurrentPage(1)
               }}
-              className="filter-select w-full"
             >
               <option value="all">All Performance</option>
-              <option value="high">High Performance (≥75)</option>
-              <option value="medium">Medium Performance (50-74)</option>
-              <option value="low">Low Performance (&lt;50)</option>
+              <option value="high">High (≥70%)</option>
+              <option value="medium">Medium (50-70%)</option>
+              <option value="low">Low (&lt;50%)</option>
             </select>
-          </div>
-          
-          <button
-            onClick={exportData}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
-          >
-            <span>📥</span>
-            <span>Export CSV</span>
-          </button>
-        </div>
-        
-        <div className="mt-4 flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center space-x-4">
-            <span>Showing {filteredData.length.toLocaleString()} hybrid systems</span>
-            {searchTerm && (
-              <span className="text-purple-600">
-                Filtered by: "{searchTerm}"
-              </span>
-            )}
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-primary-600">● High Performance</span>
-            <span className="text-yellow-600">● Medium Performance</span>
-            <span className="text-red-600">● Low Performance</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Data Table */}
-      <div className="table-container">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('id')}
-              >
-                Hybrid ID
-                {sortField === 'id' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th>Lignin Type</th>
-              <th>IL Components</th>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('lignin_ratio')}
-              >
-                Lignin Ratio (%)
-                {sortField === 'lignin_ratio' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('conductivity')}
-              >
-                Conductivity (mS/cm)
-                {sortField === 'conductivity' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('capacity')}
-              >
-                Capacity (mAh/g)
-                {sortField === 'capacity' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('cycle_stability')}
-              >
-                Stability (%)
-                {sortField === 'cycle_stability' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th 
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSort('performance_score')}
-              >
-                Performance Score
-                {sortField === 'performance_score' && (
-                  <span className="ml-1">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((item, index) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="font-mono text-sm">
-                  <div className="flex items-center space-x-2">
-                    {parseFloat(item.performance_score) >= 75 && (
-                      <span className="text-yellow-500">⭐</span>
-                    )}
-                    <span>{item.id}</span>
-                  </div>
-                </td>
-                <td>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                    item.lignin_type === 'Guaiacyl' ? 'bg-primary-100 text-primary-800' :
-                    item.lignin_type === 'Syringyl' ? 'bg-secondary-100 text-secondary-800' :
-                    item.lignin_type === 'p-Hydroxyphenyl' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {item.lignin_type}
-                  </span>
-                </td>
-                <td>
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs bg-secondary-100 text-secondary-800 px-2 py-0.5 rounded">
-                      {item.cation}
-                    </span>
-                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
-                      {item.anion}
-                    </span>
-                  </div>
-                </td>
-                <td>{item.lignin_ratio}%</td>
-                <td>
-                  <span className={`font-medium ${
-                    parseFloat(item.conductivity) > 15 ? 'text-primary-600' :
-                    parseFloat(item.conductivity) > 8 ? 'text-yellow-600' :
-                    'text-gray-600'
-                  }`}>
-                    {item.conductivity}
-                  </span>
-                </td>
-                <td>
-                  <span className={`font-medium ${
-                    parseFloat(item.capacity) > 230 ? 'text-primary-600' :
-                    parseFloat(item.capacity) > 180 ? 'text-yellow-600' :
-                    'text-gray-600'
-                  }`}>
-                    {item.capacity}
-                  </span>
-                </td>
-                <td>
-                  <span className={`font-medium ${
-                    parseFloat(item.cycle_stability) > 90 ? 'text-primary-600' :
-                    parseFloat(item.cycle_stability) > 80 ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`}>
-                    {item.cycle_stability}
-                  </span>
-                </td>
-                <td>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getPerformanceBadge(item.performance_score)}`}>
-                    {item.performance_score}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Top Performers */}
-      <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
-        <div className="flex items-center space-x-2 mb-4">
-          <span className="text-xl">⭐</span>
-          <h3 className="text-lg font-semibold text-gray-900">Top Performing Systems</h3>
-        </div>
-        <div className="grid md:grid-cols-3 gap-4">
-          {data
-            .sort((a, b) => parseFloat(b.performance_score) - parseFloat(a.performance_score))
-            .slice(0, 3)
-            .map((item, index) => (
-              <div key={item.id} className="bg-white p-4 rounded-lg border border-yellow-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-sm text-gray-600">{item.id}</span>
-                  <span className="text-lg font-bold text-yellow-600">#{index + 1}</span>
-                </div>
-                <div className="space-y-1 text-sm">
-                  <div><strong>Type:</strong> {item.lignin_type}</div>
-                  <div><strong>IL:</strong> {item.cation}-{item.anion}</div>
-                  <div><strong>Conductivity:</strong> {item.conductivity} mS/cm</div>
-                  <div><strong>Capacity:</strong> {item.capacity} mAh/g</div>
-                  <div><strong>Score:</strong> <span className="font-bold text-primary-600">{item.performance_score}</span></div>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} results
-          </div>
-          
-          <div className="flex items-center space-x-2">
             <button
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              onClick={exportToCSV}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
-              ←
+              Export CSV
             </button>
-            
-            <div className="flex items-center space-x-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNum
-                if (totalPages <= 5) {
-                  pageNum = i + 1
-                } else if (currentPage <= 3) {
-                  pageNum = i + 1
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i
-                } else {
-                  pageNum = currentPage - 2 + i
-                }
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-1 rounded-lg text-sm ${
-                      currentPage === pageNum
-                        ? 'bg-purple-600 text-white'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              })}
+          </div>
+        </div>
+
+        {/* Data Table */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Components</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ratio</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conductivity</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capacity</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sustainability</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {paginatedData.map((item, index) => (
+                  <tr key={item.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-900">{item.ligninId}</div>
+                        <div className="text-gray-500">{item.ilId}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.ratio}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`text-sm font-medium ${
+                        item.conductivity > 15 ? 'text-green-600' :
+                        item.conductivity > 10 ? 'text-yellow-600' : 'text-red-600'
+                      }`}>
+                        {item.conductivity} mS/cm
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`text-sm font-medium ${
+                        item.capacity > 250 ? 'text-green-600' :
+                        item.capacity > 220 ? 'text-yellow-600' : 'text-red-600'
+                      }`}>
+                        {item.capacity} mAh/g
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.sustainability}%</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getPerformanceColor(parseFloat(item.performanceScore))}`}>
+                        {item.performanceScore}%
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                Next
+              </button>
             </div>
-            
-            <button
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-            >
-              →
-            </button>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                  <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> of{' '}
+                  <span className="font-medium">{filteredData.length}</span> results
+                </p>
+              </div>
+              <div>
+                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                  <button
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const page = i + 1
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                          currentPage === page
+                            ? 'z-10 bg-purple-50 border-purple-500 text-purple-600'
+                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  })}
+                  <button
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </nav>
+              </div>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

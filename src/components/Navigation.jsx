@@ -7,81 +7,71 @@ const Navigation = () => {
 
   const navItems = [
     { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/lignin', label: 'Lignin Database', icon: '🧬' },
-    { path: '/ionic-liquids', label: 'Ionic Liquids', icon: '⚡' },
-    { path: '/hybrids', label: 'Hybrid Systems', icon: '🔬' },
+    { path: '/lignin', label: 'Lignin Database', icon: '🌿' },
+    { path: '/ionic', label: 'Ionic Liquids', icon: '⚡' },
+    { path: '/hybrid', label: 'Hybrid Systems', icon: '🔬' },
     { path: '/analytics', label: 'Analytics', icon: '📊' },
-    { path: '/about', label: 'About', icon: 'ℹ️' }
+    { path: '/about', label: 'About', icon: '📚' }
   ]
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200">
-      <div className="container mx-auto px-4">
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">🧬</span>
             </div>
-            <div>
-              <div className="text-xl font-bold text-gray-900">Lignin Database</div>
-              <div className="text-sm text-gray-600">ML-Driven Materials Platform</div>
-            </div>
+            <h1 className="text-xl font-bold text-gray-800">Lignin Materials Database</h1>
           </Link>
-
+          
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                className={`flex items-center space-x-1 px-3 py-2 rounded-md font-medium transition-colors ${
                   location.pathname === item.path
-                    ? 'bg-primary-100 text-primary-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'text-green-600 bg-green-50'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
                 }`}
               >
-                <span className="mr-2">{item.icon}</span>
-                {item.label}
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
               </Link>
             ))}
           </div>
 
           {/* Mobile menu button */}
           <button
+            className="md:hidden"
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <div className="space-y-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`block px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                    location.pathname === item.path
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  <span className="mr-2">{item.icon}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+          <div className="md:hidden pb-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md font-medium transition-colors ${
+                  location.pathname === item.path
+                    ? 'text-green-600 bg-green-50'
+                    : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </div>
         )}
       </div>
