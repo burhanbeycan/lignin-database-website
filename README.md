@@ -1,27 +1,28 @@
-# Lignin Materials Database
+# Lignin Materials Database - Interactive Research Platform
 
-> Machine Learning-Driven Platform for Sustainable Energy Storage Materials Discovery
+## 🧬 Overview
 
-[![Deploy to GitHub Pages](https://github.com/username/lignin-database-website/actions/workflows/deploy.yml/badge.svg)](https://github.com/username/lignin-database-website/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+This is an interactive web platform for exploring machine learning-driven design of lignin-ionic liquid hybrid electrolytes for sustainable energy storage applications. The platform provides comprehensive access to molecular databases, performance analytics, and research insights.
 
-## 🌟 Overview
+## 🚀 Features
 
-This interactive web platform presents a comprehensive database of lignin-ionic liquid hybrid electrolytes for sustainable battery applications. The project combines machine learning techniques with extensive molecular databases to accelerate the discovery of high-performance, eco-friendly energy storage materials.
+### 📊 Interactive Databases
+- **Lignin Structures**: 5,000 molecular structures with 54 descriptors
+- **Ionic Liquids**: 2,000 combinations with electrochemical properties  
+- **Hybrid Systems**: 5,000 optimized formulations with ML predictions
 
-### 🎯 Key Features
+### 🔍 Advanced Functionality
+- Real-time search and filtering across all databases
+- Interactive data tables with sorting and pagination
+- CSV export functionality for research use
+- Performance analytics with visualizations
+- Mobile-responsive design for presentations
 
-- **📊 Comprehensive Database**: 12,000+ molecular structures and properties
-- **🧬 Lignin Structures**: 5,000 lignin molecules with detailed descriptors
-- **⚡ Ionic Liquids**: 2,000 ionic liquid combinations with electrochemical properties
-- **🔬 Hybrid Systems**: 5,000 optimized formulations with performance predictions
-- **📈 Interactive Analytics**: Real-time visualizations and statistical analysis
-- **🔍 Advanced Search**: Multi-parameter filtering and sorting capabilities
-- **📥 Data Export**: CSV download functionality for research use
-
-## 🚀 Live Demo
-
-Visit the live application: [https://username.github.io/lignin-database-website](https://username.github.io/lignin-database-website)
+### 📈 Analytics Dashboard
+- Performance distribution analysis
+- Top performer identification
+- Family-based performance comparison
+- Sustainability and economic impact metrics
 
 ## 🛠️ Technology Stack
 
@@ -29,20 +30,19 @@ Visit the live application: [https://username.github.io/lignin-database-website]
 - **Styling**: Tailwind CSS
 - **Routing**: React Router DOM
 - **Deployment**: GitHub Pages
-- **CI/CD**: GitHub Actions
+- **Data Processing**: Client-side JavaScript
 
 ## 📦 Installation
 
 ### Prerequisites
-
-- Node.js 16+ 
-- npm or yarn
+- Node.js 18+ 
+- npm or yarn package manager
 
 ### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/username/lignin-database-website.git
+   git clone https://github.com/burhanbeycan/lignin-database-website.git
    cd lignin-database-website
    ```
 
@@ -56,12 +56,12 @@ Visit the live application: [https://username.github.io/lignin-database-website]
    npm run dev
    ```
 
-4. **Open your browser**
+4. **Open in browser**
    ```
    http://localhost:5173
    ```
 
-### Build for Production
+### Production Build
 
 ```bash
 npm run build
@@ -69,81 +69,78 @@ npm run build
 
 The built files will be in the `dist/` directory.
 
-## 📊 Database Structure
+## 🌐 Deployment
+
+This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+
+### Automatic Deployment
+1. Push changes to the `main` branch
+2. GitHub Actions will automatically build and deploy
+3. Website will be available at: `https://burhanbeycan.github.io/lignin-database-website`
+
+### Manual Deployment
+```bash
+npm run build
+# Deploy the dist/ folder to your hosting provider
+```
+
+## 📊 Data Sources
 
 ### Lignin Database
-- **Size**: 5,000 structures
-- **Descriptors**: 54 molecular properties
-- **Families**: Guaiacyl, Syringyl, p-Hydroxyphenyl, Mixed
-- **Sources**: Hardwood, Softwood, Grass, Agricultural waste
+- **Source**: Eswaran, S.C.D. et al. *Sci. Data* **9**, 647 (2022)
+- **DOI**: 10.1038/s41597-022-01709-4
+- **Content**: 5,000 lignin molecular structures with comprehensive descriptors
 
-### Ionic Liquid Database
-- **Size**: 2,000 combinations
-- **Cations**: EMIM, BMIM, HMIM, OMIM, Py14, N1114, P1444
-- **Anions**: BF4, PF6, Tf2N, OTf, DCA, SCN, Cl, Br
-- **Properties**: Conductivity, viscosity, electrochemical window, capacity
+### Ionic Liquid Database  
+- **Source**: Shobayo, O. et al. *Electrochim. Acta* **441**, 141824 (2023)
+- **DOI**: 10.1016/j.electacta.2023.141824
+- **Content**: 2,000 ionic liquid combinations with electrochemical properties
 
-### Hybrid Systems Database
-- **Size**: 5,000 formulations
-- **Performance Metrics**: Conductivity, capacity, stability, efficiency
-- **Optimization**: Multi-objective ML predictions
-- **Sustainability**: Environmental and economic indicators
+### Molecular Descriptors
+- **Source**: RDKit 2023.03.1
+- **URL**: http://www.rdkit.org
+- **Content**: 272 molecular descriptors including topological, electronic, and physicochemical properties
 
 ## 🔬 Research Applications
 
-### Sustainable Energy Storage
-- Bio-based electrolytes for next-generation batteries
-- Reduced environmental impact through biomass utilization
-- Cost-effective alternatives to conventional materials
+### Sustainable Materials Science
+- Lignin valorization for circular economy
+- Bio-based electrolyte development
+- Waste biomass utilization strategies
+- Green chemistry applications
 
-### Materials Discovery
-- AI-guided molecular design and optimization
-- Structure-property relationship analysis
-- Accelerated screening and validation
+### Energy Storage Technology
+- Next-generation battery materials
+- Grid-scale energy storage solutions
+- Electric vehicle applications
+- Renewable energy integration
 
-### Circular Economy
-- Lignin waste valorization
-- Renewable feedstock utilization
-- Sustainable manufacturing processes
+## 📈 Key Research Results
 
-## 📈 Key Results
+- **Maximum Conductivity**: 25 mS/cm (67% improvement over baseline)
+- **Peak Capacity**: 280 mAh/g in optimal formulations
+- **Carbon Footprint Reduction**: 35.7% vs conventional electrolytes
+- **Pareto Optimal Solutions**: 127 multi-objective optimized systems
+- **Model Performance**: R² > 0.89 across all prediction targets
 
-### Performance Achievements
-- ⚡ **Conductivity**: Up to 25 mS/cm (exceeds commercial standards)
-- 🔋 **Capacity**: Reaching 280 mAh/g for optimal formulations
-- 🛡️ **Stability**: Above 95% after 1000 cycles
-- 🎯 **Optimization**: 127 Pareto-optimal solutions identified
+## 🏗️ Project Structure
 
-### Sustainability Impact
-- 🌱 **Carbon Footprint**: 35.7% reduction vs conventional electrolytes
-- 💰 **Cost**: 28.3% reduction through biomass utilization
-- ♻️ **Toxicity**: 60% reduction in environmental indicators
-- 🌍 **Renewability**: 100% bio-based feedstock
-
-## 📚 Data Sources
-
-### Primary References
-
-1. **Lignin Structural Database**
-   - Eswaran, S.C.D., Subramaniam, S., Gelebart, A.H. et al. 
-   - *A comprehensive database of lignin's structural diversity for machine learning applications.*
-   - **Sci Data 9**, 647 (2022). DOI: [10.1038/s41597-022-01709-4](https://doi.org/10.1038/s41597-022-01709-4)
-
-2. **Ionic Liquid Properties**
-   - Shobayo, O., Akinpelu, A., Tran, M.K. et al.
-   - *Ionic liquid electrolytes for metal-air batteries: A comprehensive review.*
-   - **Electrochim. Acta 441**, 141824 (2023). DOI: [10.1016/j.electacta.2023.141824](https://doi.org/10.1016/j.electacta.2023.141824)
-
-### Computational Tools
-- **RDKit**: Molecular descriptor calculation (v2023.03.1)
-- **Scikit-learn**: Machine learning algorithms (v1.3.0)
-- **NSGA-II**: Multi-objective optimization
+```
+src/
+├── components/           # React components
+│   ├── Navigation.jsx   # Main navigation
+│   ├── HomePage.jsx     # Landing page
+│   ├── LigninDatabase.jsx
+│   ├── IonicLiquidDatabase.jsx
+│   ├── HybridDatabase.jsx
+│   ├── Analytics.jsx    # Charts and insights
+│   └── About.jsx        # Research documentation
+├── App.jsx              # Main application
+├── main.jsx            # Entry point
+└── index.css           # Global styles
+```
 
 ## 🤝 Contributing
-
-We welcome contributions to improve the database and platform! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Workflow
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -155,33 +152,33 @@ We welcome contributions to improve the database and platform! Please see our [C
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📧 Contact
-
-- **Project Lead**: [Your Name](mailto:your.email@example.com)
-- **Institution**: [Your Institution]
-- **GitHub**: [@username](https://github.com/username)
-
-## 🙏 Acknowledgments
-
-- Special thanks to the authors of the original lignin and ionic liquid databases
-- The open-source community for providing excellent tools and libraries
-- Research institutions supporting sustainable materials development
-
-## 📊 Citation
-
-If you use this database or platform in your research, please cite:
+## 📝 Citation
 
 ```bibtex
 @misc{lignin_database_2024,
   title={Machine Learning-Driven Design of Lignin-Ionic Liquid Hybrid Electrolytes for Sustainable Energy Storage Applications},
-  author={Your Name},
+  author={[Author Name]},
   year={2024},
-  publisher={GitHub},
-  url={https://github.com/username/lignin-database-website}
+  url={https://burhanbeycan.github.io/lignin-database-website},
+  note={Interactive Database Platform}
 }
 ```
 
+## 📞 Contact
+
+For questions about this research or collaboration opportunities:
+
+- **GitHub**: [@burhanbeycan](https://github.com/burhanbeycan)
+- **Project URL**: https://burhanbeycan.github.io/lignin-database-website
+
+## 🙏 Acknowledgments
+
+- Lignin structural data from Eswaran et al. (2022)
+- Ionic liquid electrochemical data from Shobayo et al. (2023)
+- RDKit development team for molecular descriptor calculations
+- Open source community for React and related technologies
+
 ---
 
-**Built with ❤️ for sustainable materials research**
+**Built for open science and sustainable research** 🌱
 
