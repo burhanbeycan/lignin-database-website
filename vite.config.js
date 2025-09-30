@@ -12,15 +12,9 @@ export default defineConfig({
     minify: 'esbuild',
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name].[hash].js',
-        chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]'
-      },
-    },
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 5173
+        manualChunks: undefined,
+      }
+    }
   }
 })
 
