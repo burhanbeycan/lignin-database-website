@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import HomePage from './components/HomePage'
@@ -16,8 +16,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/lignin" element={<LigninDatabase />} />
-          <Route path="/ionic" element={<IonicLiquidDatabase />} />
-          <Route path="/hybrid" element={<HybridDatabase />} />
+          <Route path="/ionic-liquids" element={<IonicLiquidDatabase />} />
+          <Route path="/hybrid-systems" element={<HybridDatabase />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/about" element={<About />} />
         </Routes>
@@ -27,4 +27,3 @@ function App() {
 }
 
 export default App
-
