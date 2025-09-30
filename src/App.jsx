@@ -13,16 +13,14 @@ function App() {
     <Router basename="/lignin-database-website">
       <div className="min-h-screen bg-gray-50">
         <Navigation />
-        <main className="container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/lignin" element={<LigninDatabase />} />
-            <Route path="/ionic-liquids" element={<IonicLiquidDatabase />} />
-            <Route path="/hybrids" element={<HybridDatabase />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/lignin" element={<LigninDatabase />} />
+          <Route path="/ionic" element={<IonicLiquidDatabase />} />
+          <Route path="/hybrid" element={<HybridDatabase />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
       </div>
     </Router>
   )
