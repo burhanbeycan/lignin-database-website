@@ -3,45 +3,24 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Interactive ML-driven lignin materials database for sustainable energy storage applications",
-  "author": "Burhan Beycan",
-  "license": "MIT",
-  "homepage": "https://burhanbeycan.github.io/lignin-database-website",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.0",
-    "plotly.js": "^2.26.0",
-    "react-plotly.js": "^2.6.0",
-    "papaparse": "^5.4.1",
-    "lucide-react": "^0.263.1"
+    "react-router-dom": "^6.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
-    "gh-pages": "^6.0.0",
-    "postcss": "^8.4.24",
-    "tailwindcss": "^3.3.0",
-    "vite": "^4.4.5"
-  },
-  "keywords": [
-    "lignin",
-    "materials-science",
-    "machine-learning",
-    "sustainable-energy",
-    "ionic-liquids",
-    "battery-materials",
-    "react",
-    "data-visualization"
-  ]
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
+    "vite": "^4.1.0"
+  }
 }
 
