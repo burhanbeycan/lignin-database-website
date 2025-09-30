@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import HomePage from './components/HomePage'
 import LigninDatabase from './components/LigninDatabase'
@@ -10,7 +10,7 @@ import About from './components/About'
 
 function App() {
   return (
-    <Router basename="/lignin-database-website">
+    <Router>
       <div className="min-h-screen bg-gray-50">
         <Navigation />
         <Routes>
@@ -27,3 +27,4 @@ function App() {
 }
 
 export default App
+
