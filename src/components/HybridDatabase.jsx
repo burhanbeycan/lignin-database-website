@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Search, Download, Database, ChevronLeft, ChevronRight, Star } from 'lucide-react'
-import Papa from 'papaparse'
 
 const HybridDatabase = () => {
   const [data, setData] = useState([])
@@ -12,78 +10,55 @@ const HybridDatabase = () => {
   const [sortDirection, setSortDirection] = useState('asc')
   const itemsPerPage = 20
 
-  // Load CSV data
+  // Generate sample hybrid data
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch('/lignin-database-website/assets/hybrid_comprehensive_5000.csv')
-        const csvText = await response.text()
+    const generateSampleData = () => {
+      const ligninTypes = ['Guaiacyl', 'Syringyl', 'p-Hydroxyphenyl', 'Mixed']
+      const cations = ['EMIM', 'BMIM', 'HMIM', 'OMIM', 'Py14', 'N1114']
+      const anions = ['BF4', 'PF6', 'Tf2N', 'OTf', 'DCA', 'SCN']
+      
+      const sampleData = Array.from({ length: 200 }, (_, i) => {
+        const conductivity = Math.random() * 25
+        const capacity = 100 + Math.random() * 200
+        const stability = 70 + Math.random() * 30
+        const efficiency = 80 + Math.random() * 20
         
-        Papa.parse(csvText, {
-          header: true,
-          complete: (results) => {
-            const sampleData = generateSampleHybridData(200)
-            setData(sampleData)
-            setLoading(false)
-          },
-          error: () => {
-            const sampleData = generateSampleHybridData(200)
-            setData(sampleData)
-            setLoading(false)
-          }
-        })
-      } catch (error) {
-        const sampleData = generateSampleHybridData(200)
-        setData(sampleData)
-        setLoading(false)
-      }
+        // Calculate performance score
+        const performanceScore = (
+          (conductivity / 25) * 0.3 +
+          (capacity / 300) * 0.3 +
+          (stability / 100) * 0.2 +
+          (efficiency / 100) * 0.2
+        ) * 100
+        
+        return {
+          id: `HYB_${String(i + 1).padStart(4, '0')}`,
+          lignin_id: `LIG_${String(Math.floor(Math.random() * 5000) + 1).padStart(4, '0')}`,
+          il_id: `IL_${String(Math.floor(Math.random() * 2000) + 1).padStart(4, '0')}`,
+          lignin_type: ligninTypes[Math.floor(Math.random() * ligninTypes.length)],
+          cation: cations[Math.floor(Math.random() * cations.length)],
+          anion: anions[Math.floor(Math.random() * anions.length)],
+          lignin_ratio: (10 + Math.random() * 40).toFixed(1),
+          conductivity: conductivity.toFixed(3),
+          capacity: capacity.toFixed(1),
+          cycle_stability: stability.toFixed(1),
+          coulombic_efficiency: efficiency.toFixed(1),
+          energy_density: (50 + Math.random() * 150).toFixed(1),
+          power_density: (100 + Math.random() * 500).toFixed(1),
+          performance_score: performanceScore.toFixed(1),
+          sustainability_index: (60 + Math.random() * 40).toFixed(1),
+          cost_index: (20 + Math.random() * 80).toFixed(1),
+          predicted_lifetime: Math.floor(500 + Math.random() * 1500),
+          temperature_stability: (-20 + Math.random() * 100).toFixed(1)
+        }
+      })
+      
+      setData(sampleData)
+      setLoading(false)
     }
 
-    loadData()
+    generateSampleData()
   }, [])
-
-  // Generate sample hybrid data
-  const generateSampleHybridData = (count) => {
-    const ligninTypes = ['Guaiacyl', 'Syringyl', 'p-Hydroxyphenyl', 'Mixed']
-    const cations = ['EMIM', 'BMIM', 'HMIM', 'OMIM', 'Py14', 'N1114']
-    const anions = ['BF4', 'PF6', 'Tf2N', 'OTf', 'DCA', 'SCN']
-    
-    return Array.from({ length: count }, (_, i) => {
-      const conductivity = Math.random() * 25
-      const capacity = 100 + Math.random() * 200
-      const stability = 70 + Math.random() * 30
-      const efficiency = 80 + Math.random() * 20
-      
-      // Calculate performance score
-      const performanceScore = (
-        (conductivity / 25) * 0.3 +
-        (capacity / 300) * 0.3 +
-        (stability / 100) * 0.2 +
-        (efficiency / 100) * 0.2
-      ) * 100
-      
-      return {
-        id: `HYB_${String(i + 1).padStart(4, '0')}`,
-        lignin_id: `LIG_${String(Math.floor(Math.random() * 5000) + 1).padStart(4, '0')}`,
-        il_id: `IL_${String(Math.floor(Math.random() * 2000) + 1).padStart(4, '0')}`,
-        lignin_type: ligninTypes[Math.floor(Math.random() * ligninTypes.length)],
-        cation: cations[Math.floor(Math.random() * cations.length)],
-        anion: anions[Math.floor(Math.random() * anions.length)],
-        lignin_ratio: (10 + Math.random() * 40).toFixed(1),
-        conductivity: conductivity.toFixed(3),
-        capacity: capacity.toFixed(1),
-        cycle_stability: stability.toFixed(1),
-        coulombic_efficiency: efficiency.toFixed(1),
-        energy_density: (50 + Math.random() * 150).toFixed(1),
-        power_density: (100 + Math.random() * 500).toFixed(1),
-        performance_score: performanceScore.toFixed(1),
-        sustainability_index: (60 + Math.random() * 40).toFixed(1),
-        cost_index: (20 + Math.random() * 80).toFixed(1),
-        predicted_lifetime: Math.floor(500 + Math.random() * 1500),
-        temperature_stability: (-20 + Math.random() * 100).toFixed(1)
-      }
-    })
-  }
 
   // Filter and search data
   const filteredData = useMemo(() => {
@@ -143,8 +118,12 @@ const HybridDatabase = () => {
   }
 
   const exportData = () => {
-    const csv = Papa.unparse(filteredData)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const csvContent = [
+      Object.keys(filteredData[0] || {}).join(','),
+      ...filteredData.map(row => Object.values(row).join(','))
+    ].join('\n')
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
@@ -153,13 +132,6 @@ const HybridDatabase = () => {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-  }
-
-  const getPerformanceColor = (score) => {
-    const numScore = parseFloat(score)
-    if (numScore >= 75) return 'text-primary-600'
-    if (numScore >= 50) return 'text-yellow-600'
-    return 'text-red-600'
   }
 
   const getPerformanceBadge = (score) => {
@@ -185,7 +157,7 @@ const HybridDatabase = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
-          <Database className="w-8 h-8 text-purple-600" />
+          <span className="text-4xl">🔬</span>
           <h1 className="text-3xl font-bold text-gray-900">Hybrid Systems Database</h1>
         </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -198,7 +170,7 @@ const HybridDatabase = () => {
         <div className="grid md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
               <input
                 type="text"
                 placeholder="Search by ID, lignin type, cation, or anion..."
@@ -232,7 +204,7 @@ const HybridDatabase = () => {
             onClick={exportData}
             className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <span>📥</span>
             <span>Export CSV</span>
           </button>
         </div>
@@ -323,7 +295,7 @@ const HybridDatabase = () => {
                 <td className="font-mono text-sm">
                   <div className="flex items-center space-x-2">
                     {parseFloat(item.performance_score) >= 75 && (
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      <span className="text-yellow-500">⭐</span>
                     )}
                     <span>{item.id}</span>
                   </div>
@@ -390,7 +362,7 @@ const HybridDatabase = () => {
       {/* Top Performers */}
       <div className="card bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
         <div className="flex items-center space-x-2 mb-4">
-          <Star className="w-5 h-5 text-yellow-600" />
+          <span className="text-xl">⭐</span>
           <h3 className="text-lg font-semibold text-gray-900">Top Performing Systems</h3>
         </div>
         <div className="grid md:grid-cols-3 gap-4">
@@ -428,7 +400,7 @@ const HybridDatabase = () => {
               disabled={currentPage === 1}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronLeft className="w-4 h-4" />
+              ←
             </button>
             
             <div className="flex items-center space-x-1">
@@ -465,7 +437,7 @@ const HybridDatabase = () => {
               disabled={currentPage === totalPages}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronRight className="w-4 h-4" />
+              →
             </button>
           </div>
         </div>

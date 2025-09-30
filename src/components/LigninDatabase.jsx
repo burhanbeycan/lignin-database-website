@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Search, Download, Filter, Atom, ChevronLeft, ChevronRight } from 'lucide-react'
-import Papa from 'papaparse'
 
 const LigninDatabase = () => {
   const [data, setData] = useState([])
@@ -12,61 +10,35 @@ const LigninDatabase = () => {
   const [sortDirection, setSortDirection] = useState('asc')
   const itemsPerPage = 20
 
-  // Load CSV data
+  // Generate sample lignin data
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch('/lignin-database-website/assets/lignin_comprehensive_5000.csv')
-        const csvText = await response.text()
-        
-        Papa.parse(csvText, {
-          header: true,
-          complete: (results) => {
-            // Generate sample lignin data if CSV is not available
-            const sampleData = generateSampleLigninData(100)
-            setData(sampleData)
-            setLoading(false)
-          },
-          error: () => {
-            // Fallback to sample data
-            const sampleData = generateSampleLigninData(100)
-            setData(sampleData)
-            setLoading(false)
-          }
-        })
-      } catch (error) {
-        // Fallback to sample data
-        const sampleData = generateSampleLigninData(100)
-        setData(sampleData)
-        setLoading(false)
-      }
+    const generateSampleData = () => {
+      const families = ['Guaiacyl', 'Syringyl', 'p-Hydroxyphenyl', 'Mixed']
+      const sources = ['Hardwood', 'Softwood', 'Grass', 'Agricultural waste']
+      
+      const sampleData = Array.from({ length: 100 }, (_, i) => ({
+        id: `LIG_${String(i + 1).padStart(4, '0')}`,
+        smiles: generateRandomSMILES(),
+        family: families[Math.floor(Math.random() * families.length)],
+        source: sources[Math.floor(Math.random() * sources.length)],
+        molecular_weight: (150 + Math.random() * 200).toFixed(2),
+        logP: (Math.random() * 6 - 1).toFixed(2),
+        tpsa: (40 + Math.random() * 100).toFixed(2),
+        hbd: Math.floor(Math.random() * 8),
+        hba: Math.floor(Math.random() * 10),
+        rotatable_bonds: Math.floor(Math.random() * 15),
+        aromatic_rings: Math.floor(Math.random() * 4) + 1,
+        conductivity: (Math.random() * 20).toFixed(3),
+        stability: (70 + Math.random() * 30).toFixed(1),
+        solubility: (Math.random() * 100).toFixed(2)
+      }))
+      
+      setData(sampleData)
+      setLoading(false)
     }
 
-    loadData()
+    generateSampleData()
   }, [])
-
-  // Generate sample lignin data
-  const generateSampleLigninData = (count) => {
-    const families = ['Guaiacyl', 'Syringyl', 'p-Hydroxyphenyl', 'Mixed']
-    const sources = ['Hardwood', 'Softwood', 'Grass', 'Agricultural waste']
-    
-    return Array.from({ length: count }, (_, i) => ({
-      id: `LIG_${String(i + 1).padStart(4, '0')}`,
-      smiles: generateRandomSMILES(),
-      family: families[Math.floor(Math.random() * families.length)],
-      source: sources[Math.floor(Math.random() * sources.length)],
-      molecular_weight: (150 + Math.random() * 200).toFixed(2),
-      logP: (Math.random() * 6 - 1).toFixed(2),
-      tpsa: (40 + Math.random() * 100).toFixed(2),
-      hbd: Math.floor(Math.random() * 8),
-      hba: Math.floor(Math.random() * 10),
-      rotatable_bonds: Math.floor(Math.random() * 15),
-      aromatic_rings: Math.floor(Math.random() * 4) + 1,
-      conductivity: (Math.random() * 20).toFixed(3),
-      stability: (70 + Math.random() * 30).toFixed(1),
-      solubility: (Math.random() * 100).toFixed(2)
-    }))
-  }
 
   const generateRandomSMILES = () => {
     const templates = [
@@ -132,8 +104,12 @@ const LigninDatabase = () => {
   }
 
   const exportData = () => {
-    const csv = Papa.unparse(filteredData)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const csvContent = [
+      Object.keys(filteredData[0] || {}).join(','),
+      ...filteredData.map(row => Object.values(row).join(','))
+    ].join('\n')
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
@@ -162,7 +138,7 @@ const LigninDatabase = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
-          <Atom className="w-8 h-8 text-primary-600" />
+          <span className="text-4xl">🧬</span>
           <h1 className="text-3xl font-bold text-gray-900">Lignin Database</h1>
         </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -175,7 +151,7 @@ const LigninDatabase = () => {
         <div className="grid md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
               <input
                 type="text"
                 placeholder="Search by ID, SMILES, family, or source..."
@@ -209,7 +185,7 @@ const LigninDatabase = () => {
             onClick={exportData}
             className="btn-primary flex items-center justify-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <span>📥</span>
             <span>Export CSV</span>
           </button>
         </div>
@@ -346,7 +322,7 @@ const LigninDatabase = () => {
               disabled={currentPage === 1}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronLeft className="w-4 h-4" />
+              ←
             </button>
             
             <div className="flex items-center space-x-1">
@@ -383,7 +359,7 @@ const LigninDatabase = () => {
               disabled={currentPage === totalPages}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronRight className="w-4 h-4" />
+              →
             </button>
           </div>
         </div>

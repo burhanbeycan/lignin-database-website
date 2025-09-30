@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Search, Download, Beaker, ChevronLeft, ChevronRight } from 'lucide-react'
-import Papa from 'papaparse'
 
 const IonicLiquidDatabase = () => {
   const [data, setData] = useState([])
@@ -13,59 +11,36 @@ const IonicLiquidDatabase = () => {
   const [sortDirection, setSortDirection] = useState('asc')
   const itemsPerPage = 20
 
-  // Load CSV data
+  // Generate sample ionic liquid data
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch('/lignin-database-website/assets/ionic_liquid_comprehensive_2000.csv')
-        const csvText = await response.text()
-        
-        Papa.parse(csvText, {
-          header: true,
-          complete: (results) => {
-            const sampleData = generateSampleILData(150)
-            setData(sampleData)
-            setLoading(false)
-          },
-          error: () => {
-            const sampleData = generateSampleILData(150)
-            setData(sampleData)
-            setLoading(false)
-          }
-        })
-      } catch (error) {
-        const sampleData = generateSampleILData(150)
-        setData(sampleData)
-        setLoading(false)
-      }
+    const generateSampleData = () => {
+      const cations = ['EMIM', 'BMIM', 'HMIM', 'OMIM', 'DMIM', 'Py14', 'N1114', 'P1444']
+      const anions = ['BF4', 'PF6', 'Tf2N', 'OTf', 'DCA', 'SCN', 'Cl', 'Br', 'HSO4', 'MeSO4']
+      
+      const sampleData = Array.from({ length: 150 }, (_, i) => ({
+        id: `IL_${String(i + 1).padStart(4, '0')}`,
+        cation: cations[Math.floor(Math.random() * cations.length)],
+        anion: anions[Math.floor(Math.random() * anions.length)],
+        cation_smiles: generateCationSMILES(),
+        anion_smiles: generateAnionSMILES(),
+        molecular_weight: (200 + Math.random() * 400).toFixed(2),
+        density: (1.0 + Math.random() * 0.5).toFixed(3),
+        viscosity: (10 + Math.random() * 200).toFixed(1),
+        conductivity: (0.1 + Math.random() * 15).toFixed(3),
+        melting_point: (-50 + Math.random() * 150).toFixed(1),
+        decomposition_temp: (250 + Math.random() * 200).toFixed(1),
+        electrochemical_window: (2.0 + Math.random() * 4.0).toFixed(2),
+        ionic_conductivity: (0.5 + Math.random() * 20).toFixed(3),
+        capacity: (100 + Math.random() * 150).toFixed(1),
+        cycle_stability: (80 + Math.random() * 20).toFixed(1)
+      }))
+      
+      setData(sampleData)
+      setLoading(false)
     }
 
-    loadData()
+    generateSampleData()
   }, [])
-
-  // Generate sample ionic liquid data
-  const generateSampleILData = (count) => {
-    const cations = ['EMIM', 'BMIM', 'HMIM', 'OMIM', 'DMIM', 'Py14', 'N1114', 'P1444']
-    const anions = ['BF4', 'PF6', 'Tf2N', 'OTf', 'DCA', 'SCN', 'Cl', 'Br', 'HSO4', 'MeSO4']
-    
-    return Array.from({ length: count }, (_, i) => ({
-      id: `IL_${String(i + 1).padStart(4, '0')}`,
-      cation: cations[Math.floor(Math.random() * cations.length)],
-      anion: anions[Math.floor(Math.random() * anions.length)],
-      cation_smiles: generateCationSMILES(),
-      anion_smiles: generateAnionSMILES(),
-      molecular_weight: (200 + Math.random() * 400).toFixed(2),
-      density: (1.0 + Math.random() * 0.5).toFixed(3),
-      viscosity: (10 + Math.random() * 200).toFixed(1),
-      conductivity: (0.1 + Math.random() * 15).toFixed(3),
-      melting_point: (-50 + Math.random() * 150).toFixed(1),
-      decomposition_temp: (250 + Math.random() * 200).toFixed(1),
-      electrochemical_window: (2.0 + Math.random() * 4.0).toFixed(2),
-      ionic_conductivity: (0.5 + Math.random() * 20).toFixed(3),
-      capacity: (100 + Math.random() * 150).toFixed(1),
-      cycle_stability: (80 + Math.random() * 20).toFixed(1)
-    }))
-  }
 
   const generateCationSMILES = () => {
     const cationSMILES = [
@@ -142,8 +117,12 @@ const IonicLiquidDatabase = () => {
   }
 
   const exportData = () => {
-    const csv = Papa.unparse(filteredData)
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const csvContent = [
+      Object.keys(filteredData[0] || {}).join(','),
+      ...filteredData.map(row => Object.values(row).join(','))
+    ].join('\n')
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
@@ -173,7 +152,7 @@ const IonicLiquidDatabase = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
-          <Beaker className="w-8 h-8 text-secondary-600" />
+          <span className="text-4xl">⚡</span>
           <h1 className="text-3xl font-bold text-gray-900">Ionic Liquid Database</h1>
         </div>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -186,7 +165,7 @@ const IonicLiquidDatabase = () => {
         <div className="grid md:grid-cols-5 gap-4">
           <div className="md:col-span-2">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
               <input
                 type="text"
                 placeholder="Search by ID, cation, or anion..."
@@ -236,7 +215,7 @@ const IonicLiquidDatabase = () => {
             onClick={exportData}
             className="btn-secondary flex items-center justify-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <span>📥</span>
             <span>Export CSV</span>
           </button>
         </div>
@@ -378,7 +357,7 @@ const IonicLiquidDatabase = () => {
               disabled={currentPage === 1}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronLeft className="w-4 h-4" />
+              ←
             </button>
             
             <div className="flex items-center space-x-1">
@@ -415,7 +394,7 @@ const IonicLiquidDatabase = () => {
               disabled={currentPage === totalPages}
               className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              <ChevronRight className="w-4 h-4" />
+              →
             </button>
           </div>
         </div>
