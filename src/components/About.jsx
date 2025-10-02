@@ -95,8 +95,8 @@ const About = () => {
             <div className="p-4 border-l-4 border-blue-500 bg-blue-50">
               <h3 className="font-semibold text-blue-800">Ionic Liquid Database</h3>
               <p className="text-blue-700 text-sm mt-1">
-                Shobayo, O. et al. Comprehensive electrochemical characterization of ionic liquids for metal-air battery applications. 
-                <em>Electrochim. Acta</em> <strong>441</strong>, 141824 (2023). DOI: 10.1016/j.electacta.2023.141824
+                Kilic, A. et al. Ionic liquid electrolytes for metal-air batteries: High-throughput screening and machine learning modeling. 
+                <em>Electrochim. Acta</em> <strong>441</strong>, 141824 (2025). DOI: 10.1016/j.electacta.2025.145997
               </p>
             </div>
             <div className="p-4 border-l-4 border-purple-500 bg-purple-50">
@@ -166,7 +166,7 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4">📝 Citation</h2>
           <div className="bg-white p-4 rounded-lg border-l-4 border-blue-500">
             <p className="text-sm text-gray-700 font-mono">
-              [Author Name]. (2024). Machine Learning-Driven Design of Lignin-Ionic Liquid Hybrid Electrolytes 
+              [Beycan, B. et al.]. (2026). Machine Learning-Driven Design of Lignin-Ionic Liquid Hybrid Electrolytes 
               for Sustainable Energy Storage Applications. <em>Interactive Database Platform</em>. 
               Available at: https://burhanbeycan.github.io/lignin-database-website
             </p>
