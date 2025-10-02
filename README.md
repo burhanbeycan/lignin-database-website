@@ -92,8 +92,8 @@ npm run build
 - **Content**: 5,000 lignin molecular structures with comprehensive descriptors
 
 ### Ionic Liquid Database  
-- **Source**: Shobayo, O. et al. *Electrochim. Acta* **441**, 141824 (2023)
-- **DOI**: 10.1016/j.electacta.2023.141824
+- **Source**: Kilic, A. et al. *Electrochim. Acta* **441**, 141824 (2025)
+- **DOI**: doi.org/10.1016/j.electacta.2025.145997
 - **Content**: 2,000 ionic liquid combinations with electrochemical properties
 
 ### Molecular Descriptors
@@ -157,7 +157,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```bibtex
 @misc{lignin_database_2024,
   title={Machine Learning-Driven Design of Lignin-Ionic Liquid Hybrid Electrolytes for Sustainable Energy Storage Applications},
-  author={[Author Name]},
+  author={[Beycan, B. et al.]},
   year={2024},
   url={https://burhanbeycan.github.io/lignin-database-website},
   note={Interactive Database Platform}
